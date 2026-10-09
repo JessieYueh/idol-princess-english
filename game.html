@@ -304,13 +304,13 @@ const questions = [
       voiceType: "himari",
       msg: "『好厲害喔！我有辦法變成像美月這樣子嗎？星期是登場的大明星，首字母一定要大寫！滿分通過！』"
     } 
-,{q:"【星期拼字】星期二正確寫法？",options:["Tousday","Tuesday","Thuesday","Tuseday"],ans:1,name:"星川美月",img:"美月.jpg",voiceType:"mitsuki",msg:"Tuesday 拼對了！"}
-,{q:"【星期拼字】星期四正確寫法？",options:["Turdseday","Thrusday","Thursday","Tursday"],ans:2,name:"青空陽葵",img:"陽葵.png",voiceType:"himari",msg:"Thursday 開頭是 Th！"}
-,{q:"【be 動詞】改成問句時，is / are 要怎麼做？",options:["放在句尾","直接移到句首","全部刪掉","改成 at"],ans:1,name:"星川美月",img:"美月.jpg",voiceType:"mitsuki",msg:"be 動詞移到句首！"}
-,{q:"【問地點】Where ___ you go at seven thirty?",options:["is","are","do","at"],ans:2,name:"青空陽葵",img:"陽葵.png",voiceType:"himari",msg:"一般動詞 go 的問句要用 do！"}
-,{q:"【複數】How much ___ the tickets?",options:["is","are","do","at"],ans:1,name:"星川美月",img:"美月.jpg",voiceType:"mitsuki",msg:"tickets 是複數，要用 are！"}
-,{q:"【動物複數】哪一句符合筆記？",options:["I like panda.","I likes panda.","I like pandas.","I like pandas?"],ans:2,name:"青空陽葵",img:"陽葵.png",voiceType:"himari",msg:"喜歡動物用 pandas！"}
-,{q:"【時間介系詞】I go to school ___ 7:20.",options:["are","do","is","at"],ans:3,name:"星川美月",img:"美月.jpg",voiceType:"mitsuki",msg:"具體時間前加 at！"}];
+,{q:"【星期拼字】星期二正確寫法？",options:["Tousday","Tuesday","Thuesday","Tuseday"],ans:1,name:"星川美月",img:"./images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"Tuesday 拼對了！"}
+,{q:"【星期拼字】星期四正確寫法？",options:["Turdseday","Thrusday","Thursday","Tursday"],ans:2,name:"青空陽葵",img:"./images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"Thursday 開頭是 Th！"}
+,{q:"【be 動詞】改成問句時，is / are 要怎麼做？",options:["放在句尾","直接移到句首","全部刪掉","改成 at"],ans:1,name:"星川美月",img:"./images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"be 動詞移到句首！"}
+,{q:"【問地點】Where ___ you go at seven thirty?",options:["is","are","do","at"],ans:2,name:"青空陽葵",img:"./images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"一般動詞 go 的問句要用 do！"}
+,{q:"【複數】How much ___ the tickets?",options:["is","are","do","at"],ans:1,name:"星川美月",img:"./images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"tickets 是複數，要用 are！"}
+,{q:"【動物複數】哪一句符合筆記？",options:["I like panda.","I likes panda.","I like pandas.","I like pandas?"],ans:2,name:"青空陽葵",img:"./images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"喜歡動物用 pandas！"}
+,{q:"【時間介系詞】I go to school ___ 7:20.",options:["are","do","is","at"],ans:3,name:"星川美月",img:"./images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"具體時間前加 at！"}];
 let curIdx=0,score=0,diamonds=0,hearts=3,missed=[],attemptedWrong=false;
 const $=id=>document.getElementById(id);
 function showPart(p){$('note-sec').style.display=p==='note'?'block':'none';$('quiz-sec').style.display=p==='quiz'?'block':'none';$('write-sec').classList.toggle('hidden',p!=='write');$('popup').classList.remove('active');if(p==='quiz'&&!$('finish').classList.contains('hidden')){}else if(p==='quiz')loadQ();if(p==='write')setTimeout(resizeBoard,50);window.scrollTo({top:0,behavior:'smooth'});}
