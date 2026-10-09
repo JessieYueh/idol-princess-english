@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>秘密的偶像公主・Lesson 1 英語星光錯題手冊與實戰測驗</title>
+<style>
+  :root {
+    --himari-pink: #ff4081;
+    --himari-soft: #fff0f5;
+    --mitsuki-blue: #0288d1;
+    --mitsuki-soft: #e1f5fe;
+    --card-shadow: 0 14px 35px rgba(240, 98, 146, 0.22);
+  }
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "微軟正黑體", sans-serif; }
+  body {
+    margin: 0; padding: 20px 14px;
+    background: radial-gradient(circle at top, #fff3f8 0%, #e1f5fe 100%);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  
+  .banner { text-align: center; margin-bottom: 18px; }
+  .banner h1 {
+    margin: 0; font-size: 2.1rem; color: #d81b60;
+    text-shadow: 2px 2px 0px #ffffff;
+    letter-spacing: 1px;
+  }
+  .banner p { margin: 8px 0 0; color: #303f9f; font-weight: bold; font-size: 1.2rem; }
+  
+  .card-container {
+    width: 100%; max-width: 720px; background: rgba(255, 255, 255, 0.98);
+    border-radius: 28px; padding: 24px; border: 4px solid #f8bbd0;
+    box-shadow: var(--card-shadow);
+  }
+
+  /* 雙主角戰隊展示卡片 */
+  .princess-team {
+    display: flex; justify-content: space-around; margin-bottom: 18px;
+    background: #fff5f8; padding: 14px; border-radius: 22px; border: 2.5px dashed #f48fb1;
+  }
+  .princess-card { text-align: center; width: 45%; }
+  .avatar-frame {
+    width: 110px; height: 110px; margin: 0 auto; border-radius: 50%;
+    border: 4px solid #ff4081; box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  .avatar-frame.mitsuki { border-color: #0288d1; }
+  .avatar-frame img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .p-name { font-size: 1.15rem; font-weight: 800; margin-top: 8px; color: #ad1457; }
+  .p-name.mitsuki { color: #0277bd; }
+
+  /* 筆記區字體特大排版 */
+  .note-section { display: block; }
+  .badge-tag {
+    background: linear-gradient(90deg, #ff4081, #7c4dff); color: white;
+    padding: 8px 20px; border-radius: 24px; font-size: 1.15rem; font-weight: bold;
+    display: inline-block; margin-bottom: 14px;
+  }
+  .note-box {
+    background: #fffafc; border: 2.5px solid #ffd1dc; border-radius: 18px;
+    padding: 16px 20px; margin-bottom: 16px;
+  }
+  .note-box h3 { margin: 0 0 10px; font-size: 1.35rem; color: #c2185b; display: flex; align-items: center; gap: 8px; }
+  .note-box p { margin: 6px 0; font-size: 1.2rem; color: #2c3e50; line-height: 1.75; font-weight: 500; }
+  .spell-box {
+    background: #fff; border: 2px dashed #f48fb1; border-radius: 14px;
+    padding: 14px 16px; margin: 10px 0; font-size: 1.2rem; color: #4a148c; line-height: 1.85;
+  }
+  .hl-pink { background: #ffe4ec; color: #d81b60; font-weight: bold; padding: 2px 8px; border-radius: 8px; }
+  .hl-red { color: #d32f2f; font-weight: bold; }
+  .hl-green { color: #2e7d32; font-weight: bold; }
+  
+  .btn-start {
+    width: 100%; padding: 18px; margin-top: 14px;
+    background: linear-gradient(90deg, #ff4081, #ab47bc); color: white;
+    border: none; border-radius: 22px; font-size: 1.4rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 18px rgba(233, 30, 99, 0.4); transition: transform 0.15s;
+  }
+  .btn-start:active { transform: scale(0.98); }
+
+  /* 測驗區排版加大 */
+  .quiz-section { display: none; }
+  .quiz-header-bar {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+  }
+  .btn-back-note {
+    background: #ffffff; border: 2.5px solid #ba68c8; color: #7b1fa2;
+    padding: 10px 20px; border-radius: 22px; font-size: 1.1rem; font-weight: bold;
+    cursor: pointer; transition: 0.15s; box-shadow: 0 3px 8px rgba(123, 31, 162, 0.18);
+  }
+  .btn-back-note:active { background: #f3e5f5; transform: scale(0.96); }
+  
+  .q-progress { font-size: 1.15rem; color: #6a1b9a; font-weight: 800; margin-bottom: 10px; }
+  .q-title { font-size: 1.45rem; font-weight: 800; color: #1a237e; margin: 12px 0 20px; line-height: 1.6; }
+  .options-grid { display: grid; gap: 14px; }
+  .opt-btn {
+    padding: 18px 22px; border: 3px solid #e1bee7; border-radius: 20px;
+    background: #fff; font-size: 1.3rem; font-weight: 600; color: #263238;
+    text-align: left; cursor: pointer; transition: 0.15s; outline: none; line-height: 1.45;
+  }
+  .opt-btn:active { background: #fce4ec; border-color: #f06292; transform: scale(0.98); }
+
+  /* 底部固定返回按鈕區 */
+  .quiz-footer { margin-top: 22px; text-align: center; }
+
+  /* 彈出鼓勵面板加大 */
+  .popup-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.58);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0; transition: 0.2s ease; z-index: 999;
+  }
+  .popup-overlay.active { visibility: visible; opacity: 1; }
+  .popup-box {
+    background: white; border-radius: 30px; padding: 28px 22px; width: 92%; max-width: 440px;
+    text-align: center; border: 4.5px solid #ff80ab; box-shadow: 0 20px 45px rgba(255, 64, 129, 0.45);
+    transform: scale(0.75); transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .popup-overlay.active .popup-box { transform: scale(1); }
+  
+  .pop-avatar-frame {
+    width: 155px; height: 155px; border-radius: 50%; border: 5px solid #ff4081;
+    margin: 0 auto 14px; background: #fff; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+    display: flex; align-items: center; justify-content: center;
+    animation: popBounce 0.8s infinite alternate ease-in-out;
+  }
+  @keyframes popBounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-8px); }
+  }
+  .pop-avatar-frame img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .pop-title { font-size: 1.65rem; color: #d81b60; font-weight: 900; margin-bottom: 10px; }
+  .pop-voice-text { font-size: 1.25rem; color: #311b92; line-height: 1.65; font-weight: bold; margin-bottom: 22px; }
+  .btn-next {
+    background: linear-gradient(90deg, #ff4081, #ff80ab); color: white; border: none;
+    padding: 15px 34px; border-radius: 26px; font-size: 1.3rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 5px 15px rgba(255, 64, 129, 0.45);
+  }
+</style>
+
+<style>
+.tabbar{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 18px}.tabbar button,.mini{border:2px solid #f48fb1;border-radius:16px;background:white;color:#ad1457;font-weight:800;font-size:1.05rem;padding:12px;cursor:pointer}
+.study-extra{margin-top:20px}.study-extra h2{color:#c2185b}.write-area{background:#fff;border:3px dashed #f48fb1;border-radius:18px;overflow:hidden;touch-action:none;width:100%;height:240px;display:block}.write-prompt{font-size:1.2rem;font-weight:700;color:#283593}.stats{display:flex;flex-wrap:wrap;gap:8px;font-weight:800;color:#6a1b9a}.stats span{background:#fce4ec;border-radius:12px;padding:8px}.progressbar{height:13px;background:#eee;border-radius:12px;overflow:hidden;margin:12px 0}.progressbar>div{height:100%;background:linear-gradient(90deg,#ff4081,#0288d1);width:0%}.feedback{font-size:1.2rem;color:#ad1457;font-weight:800;min-height:30px;margin-top:14px}.answer-input{font-size:1.35rem;padding:16px;width:100%;border:3px solid #f8bbd0;border-radius:14px}.hidden{display:none!important}.chip{display:inline-block;margin:5px;padding:12px;border:2px solid #f48fb1;border-radius:12px;background:white;font-size:1.1rem;cursor:pointer}.chip:disabled{opacity:.4}.result{font-size:1.3rem;line-height:1.9}.note-box{break-inside:avoid}@media(max-width:480px){.card-container{padding:14px}.banner h1{font-size:1.55rem}.avatar-frame{width:90px;height:90px}.note-box p{font-size:1.06rem}.opt-btn{font-size:1.13rem;padding:14px}}
+</style></head>
+<body>
+
+<!-- 本地原版音訊元件 -->
+<audio id="audio-himari" src="../../media/asset_b2fbc9cc46336d05.mp3" preload="auto"></audio>
+<audio id="audio-mitsuki" src="../../media/asset_7980039ab3fb6d4d.mp3" preload="auto"></audio>
+
+<div class="banner">
+  <h1>💖 秘密的偶像公主 (ひみつのアイプリ) 💖</h1>
+  <p>Lesson 1 英語星光錯題特訓・段考高分直達</p>
+</div>
+
+<div class="card-container">
+  
+  <!-- 雙主角展示區 -->
+  <div class="princess-team">
+    <div class="princess-card">
+      <div class="avatar-frame">
+        <img src="../../images/asset_7c3d93f72a48abe3.png" alt="青空陽葵">
+      </div>
+      <div class="p-name">🌸 青空陽葵</div>
+    </div>
+
+    <div class="princess-card">
+      <div class="avatar-frame mitsuki">
+        <img src="../../images/asset_315fa71af096deba.jpg" alt="星川美月">
+      </div>
+      <div class="p-name mitsuki">✨ 星川美月</div>
+    </div>
+  </div>
+
+  <div class="tabbar"><button onclick="showPart('note')">📖 複習筆記</button><button onclick="showPart('write')">✍️ Apple Pencil 書寫</button><button onclick="showPart('quiz')">🎤 星光測驗</button><button onclick="playOriginalVoice('himari')">🌸 陽葵語音</button><button onclick="playOriginalVoice('mitsuki')">✨ 美月語音</button></div>
+<!-- 1. 完整錯題文法筆記區（大字清晰版） -->
+  <div class="note-section" id="note-sec">
+    <div class="badge-tag">📖 偶像公主 4 大易錯文法星光秘笈</div>
+
+    <!-- 秘笈 1 -->
+    <div class="note-box">
+      <h3>👑 秘笈 1：星期大明星拆解咒語（別掉進陷阱！）</h3>
+      <p>只要是星期（Monday ~ Sunday），<strong>第一個字母一定要大寫</strong>！</p>
+      <div class="spell-box">
+        • 星期二：<span class="hl-red">Tousday ❌</span> ➔ <span class="hl-green">Tuesday ⭕</span> (Tue + s + day)<br>
+        • 星期三：<span class="hl-red">wensday ❌</span> ➔ <span class="hl-green">Wednesday ⭕</span> (藏著不發音的隱形 <b>d</b>！)<br>
+        • 星期四：<span class="hl-red">Turdseday ❌</span> ➔ <span class="hl-green">Thursday ⭕</span> (前面是 <b>Th</b> 咬舌音)
+      </div>
+    </div>
+
+    <!-- 秘笈 2 -->
+    <div class="note-box">
+      <h3>🎤 秘笈 2：句子改問句？找 be 動詞還是請小精靈！</h3>
+      <p>• <b>有 is / are</b>：直接移到最前面當隊長戴皇冠（大寫）！<br>
+         例：<i>It is Tuesday. ➔ Is today Tuesday?</i></p>
+      <p>• <b>是一般動作（go / take）</b>：動詞不能亂跑，要請救兵 <span class="hl-pink">Do / Does</span> 來幫忙！<br>
+         例：原句劃線 <u>zoo</u>（地點）➔ 疑問詞請出 <b>Where</b>：<br>
+         <i>Where <b>do</b> you go at seven thirty?</i></p>
+    </div>
+
+    <!-- 秘笈 3 -->
+    <div class="note-box">
+      <h3>🎀 秘笈 3：回答問句（問句改句子）三步驟</h3>
+      <p>① <b>換主角</b>：問句問 you（你），回答要變回 <span class="hl-pink">I（我）</span>。<br>
+         ② <b>時間加配件</b>：回答具體鐘點（7:20），前面一定要繫上小領結 <span class="hl-pink">at</span>！<br>
+         ③ <b>換標點</b>：問句結尾戴耳環 <b>問號 (?)</b>，回答句結尾一定要打上 <b>句點 (.)</b>，千萬別順手寫問號！<br>
+          例：<i>I go to school <b>at 7:20.</b></i></p>
+    </div>
+
+    <!-- 秘笈 4 -->
+    <div class="note-box">
+      <h3>🪞 秘笈 4：單數還是複數隊友？</h3>
+      <p>• 看到門票有加 s（<span class="hl-pink">tickets</span>）代表很多張票，隊友必須是 <span class="hl-pink">are</span> 而不是 is！<br>
+         例：<span class="hl-red">How much is the tickets? ❌</span> ➔ <span class="hl-green">How much are the tickets? ⭕</span><br>
+      • 表達喜歡動物時要用複數：<span class="hl-red">I like panda. ❌</span> ➔ <span class="hl-green">I like <b>pandas</b>. ⭕</span></p>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">💖 開始 13 題星光小測驗 ➔</button>
+  </div>
+
+  <section id="write-sec" class="study-extra hidden"><div class="badge-tag">✍️ 星光手寫練習室</div><p>使用 Apple Pencil 或手指寫字，寫完可對照筆記。</p><p class="write-prompt" id="write-prompt">1. 寫出星期三的英文。</p><div class="tabbar"><button onclick="changePrompt(-1)">⬅ 上一題</button><button onclick="changePrompt(1)">下一題 ➡</button><button onclick="clearBoard()">🧽 清除筆跡</button><button onclick="saveBoard()">💾 儲存書寫圖片</button></div><canvas class="write-area" id="board"></canvas><p id="write-counter">第 1 / 6 題</p><details><summary>💡 查看參考答案（先寫完再看）</summary><p id="write-answer"></p></details></section>
+<!-- 2. 測驗區（特大字體 + 隨時可返回文法頁面按鈕） -->
+  <div class="quiz-section" id="quiz-sec">
+    <div class="quiz-header-bar">
+      <div class="badge-tag" id="q-badge" style="margin-bottom:0;">Stage 1 / 6</div>
+      <button class="btn-back-note" onclick="backToNotes()">📖 看文法秘笈</button>
+    </div>
+
+    <div class="stats"><span id="score">⭐ 0 分</span><span id="hearts">❤️❤️❤️</span><span id="diamonds">💎 0</span></div><div class="progressbar"><div id="progressfill"></div></div><div class="q-progress" id="q-prog"></div>
+    <div class="q-title" id="q-text">載入中...</div>
+    <div class="options-grid" id="opt-list"></div><div class="feedback" id="feedback" aria-live="polite"></div><div id="finish" class="result hidden"></div>
+
+    <div class="quiz-footer">
+      <button class="btn-back-note" onclick="backToNotes()">📖 想再看一次秘笈？點此回到文法說明頁</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- 答對彈出鼓勵視窗（大字與大頭像） -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="pop-avatar-frame" id="pop-avatar-slot">
+      <img id="pop-img" src="" alt="角色">
+    </div>
+    <div class="pop-title" id="pop-title">太精彩了！答對了！</div>
+    <div class="pop-voice-text" id="pop-msg"></div>
+    <button class="btn-next" onclick="nextQuestion()">下一個星光舞台 ➔</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+    {
+      q: "【星期拼字・隱形字母】陽葵想在「星期三」辦活動，請問哪一個拼法才正確？",
+      options: ["wensday", "Wednesday", "Wensday", "wednesday"],
+      ans: 1,
+      name: "星川美月",
+      img: "../../images/asset_315fa71af096deba.jpg",
+      voiceType: "mitsuki",
+      msg: "『真的耶！陽葵太棒了！Wednesday 裡面藏著害羞不發音的 d，開頭也戴了大寫皇冠喔！』"
+    },
+    {
+      q: "【星期拼字・陷阱避開】星期二（Tuesday）與星期四（Thursday）的正確組合是？",
+      options: ["Tousday / Turdseday", "Tuesday / Thursday", "Tousday / Thursday", "Tuesday / Turdseday"],
+      ans: 1,
+      name: "青空陽葵",
+      img: "../../images/asset_7c3d93f72a48abe3.png",
+      voiceType: "himari",
+      msg: "『好厲害喔！我有辦法變成像美月這樣子嗎？Tue+s+day 和 Thur+s+day 都完全記住了！』"
+    },
+    {
+      q: "【回答問句・時間領結】回答「What time do you go to school? (7:20)」，最標準且標點正確的是？",
+      options: ["I go to school 7:20?", "I go to school at 7:20.", "I go to school at 7:20?", "I go school 7:20."],
+      ans: 1,
+      name: "星川美月",
+      img: "../../images/asset_315fa71af096deba.jpg",
+      voiceType: "mitsuki",
+      msg: "『真的耶！陽葵太棒了！具體時間前面繫上 at，而且回答句句尾打了漂亮的句點喔！』"
+    },
+    {
+      q: "【改問句・一般動詞搬救兵】句子「I go to the zoo at seven thirty.」若劃線是 the zoo（地點），問句是？",
+      options: ["Where do you go at seven thirty?", "What do you go at seven thirty?", "Where you go at seven thirty?", "When do you go to zoo?"],
+      ans: 0,
+      name: "青空陽葵",
+      img: "../../images/asset_7c3d93f72a48abe3.png",
+      voiceType: "himari",
+      msg: "『好厲害喔！我有辦法變成像美月這樣子嗎？問地點出動 Where，還請了小精靈 do 敲門！』"
+    },
+    {
+      q: "【抓出錯誤・門票複數】句子「How much is the tickets?」哪裡寫錯了？",
+      options: ["把 is 改成 are", "把 tickets 改成 ticketes", "把 much 改成 many", "句尾改成句號"],
+      ans: 0,
+      name: "星川美月",
+      img: "../../images/asset_315fa71af096deba.jpg",
+      voiceType: "mitsuki",
+      msg: "『真的耶！陽葵太棒了！tickets 有加 s 代表很多張票，複數好隊友一定要找 are！』"
+    },
+    {
+      q: "【抓出錯誤・大明星大寫】句子「What day is today? It's monday.」哪裡需要換造型？",
+      options: ["today 改成 Yesterday", "monday 改成大寫 Monday", "It's 改成 Its", "完全正確不需要改"],
+      ans: 1,
+      name: "青空陽葵",
+      img: "../../images/asset_7c3d93f72a48abe3.png",
+      voiceType: "himari",
+      msg: "『好厲害喔！我有辦法變成像美月這樣子嗎？星期是登場的大明星，首字母一定要大寫！滿分通過！』"
+    } 
+,{q:"【星期拼字】星期二正確寫法？",options:["Tousday","Tuesday","Thuesday","Tuseday"],ans:1,name:"星川美月",img:"../../images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"Tuesday 拼對了！"}
+,{q:"【星期拼字】星期四正確寫法？",options:["Turdseday","Thrusday","Thursday","Tursday"],ans:2,name:"青空陽葵",img:"../../images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"Thursday 開頭是 Th！"}
+,{q:"【be 動詞】改成問句時，is / are 要怎麼做？",options:["放在句尾","直接移到句首","全部刪掉","改成 at"],ans:1,name:"星川美月",img:"../../images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"be 動詞移到句首！"}
+,{q:"【問地點】Where ___ you go at seven thirty?",options:["is","are","do","at"],ans:2,name:"青空陽葵",img:"../../images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"一般動詞 go 的問句要用 do！"}
+,{q:"【複數】How much ___ the tickets?",options:["is","are","do","at"],ans:1,name:"星川美月",img:"../../images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"tickets 是複數，要用 are！"}
+,{q:"【動物複數】哪一句符合筆記？",options:["I like panda.","I likes panda.","I like pandas.","I like pandas?"],ans:2,name:"青空陽葵",img:"../../images/asset_7c3d93f72a48abe3.png",voiceType:"himari",msg:"喜歡動物用 pandas！"}
+,{q:"【時間介系詞】I go to school ___ 7:20.",options:["are","do","is","at"],ans:3,name:"星川美月",img:"../../images/asset_315fa71af096deba.jpg",voiceType:"mitsuki",msg:"具體時間前加 at！"}];
+let curIdx=0,score=0,diamonds=0,hearts=3,missed=[],attemptedWrong=false;
+const $=id=>document.getElementById(id);
+function showPart(p){$('note-sec').style.display=p==='note'?'block':'none';$('quiz-sec').style.display=p==='quiz'?'block':'none';$('write-sec').classList.toggle('hidden',p!=='write');$('popup').classList.remove('active');if(p==='quiz'&&!$('finish').classList.contains('hidden')){}else if(p==='quiz')loadQ();if(p==='write')setTimeout(resizeBoard,50);window.scrollTo({top:0,behavior:'smooth'});}
+function startQuiz(){resetGame();showPart('quiz')}
+function backToNotes(){showPart('note')}
+function resetGame(){curIdx=0;score=0;diamonds=0;hearts=3;missed=[];attemptedWrong=false;$('finish').classList.add('hidden');$('q-text').classList.remove('hidden');$('opt-list').classList.remove('hidden');$('popup').classList.remove('active');loadQ()}
+function loadQ(){if(curIdx>=questions.length){finishGame();return;}let q=questions[curIdx];$('q-badge').textContent=`Stage ${curIdx+1} / ${questions.length}`;$('q-prog').textContent=`第 ${curIdx+1} / ${questions.length} 題`;$('q-text').textContent=q.q;$('feedback').textContent='';$('score').textContent=`⭐ ${score} 分`;$('hearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('diamonds').textContent=`💎 ${diamonds}`;$('progressfill').style.width=(curIdx/questions.length*100)+'%';$('opt-list').innerHTML='';q.options.forEach((opt,i)=>{let b=document.createElement('button');b.className='opt-btn';b.textContent=opt;b.onclick=()=>checkAns(i);$('opt-list').appendChild(b);});}
+function checkAns(i){let q=questions[curIdx];if(i===q.ans){if(!attemptedWrong){score+=Math.round(100/questions.length)}diamonds++;$('pop-img').src=q.img;$('pop-title').textContent='✨ '+q.name+'：答對了！ ✨';$('pop-msg').textContent=q.msg;playSparkleSound();playOriginalVoice(q.voiceType);$('popup').classList.add('active');}else{if(!attemptedWrong){missed.push(q.q);hearts=Math.max(0,hearts-1)}attemptedWrong=true;$('feedback').textContent='💗 差一點，再試一次！提示：'+hintFor(curIdx);}}
+function hintFor(i){return ['注意大寫與 Wednesday 裡的 d','比較 Tuesday 和 Thursday 的字首','時間前需要一個短短的字','問地點要想想 Where 與助動詞','複數 tickets 要配複數動詞','星期名稱開頭要大寫','注意 Tuesday 的字母順序','想想 Thursday 的 Th','be 動詞可以當問句隊長','一般動詞需要助動詞','tickets 不是單數','喜歡動物時注意複數 s','具體鐘點前要加介系詞'][i]||'回到筆記找提示';}
+function nextQuestion(){['audio-himari','audio-mitsuki'].forEach(id=>{$(id).pause();$(id).currentTime=0});$('popup').classList.remove('active');curIdx++;attemptedWrong=false;loadQ()}
+function finishGame(){let percent=Math.round(score/100*100);let title=percent>=90?'鑽石大師':percent>=70?'紅石探險家':percent>=50?'鐵劍勇士':'勇敢小礦工';$('q-badge').textContent='🎉 完成挑戰';$('q-prog').textContent='星光舞台結算';$('q-text').classList.add('hidden');$('opt-list').classList.add('hidden');$('progressfill').style.width='100%';$('finish').classList.remove('hidden');$('finish').innerHTML=`<h2>✨ ${title} ✨</h2><p>⭐ 最終分數：${percent} 分<br>💎 鑽石：${diamonds} 顆<br>✅ 一次答對：${questions.length-missed.length} / ${questions.length} 題</p><p>💗 ${missed.length?'再練習：'+missed.map(x=>x.replace(/【.*?】/,'').slice(0,28)).join('、'):'全部都很熟練！'}</p><button class="btn-start" onclick="startQuiz()">🔁 再玩一次</button>`;}
+function playSparkleSound(){try{let ctx=new (window.AudioContext||window.webkitAudioContext)();[523,659,784].forEach((f,i)=>{let o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f;g.gain.setValueAtTime(.08,ctx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.25);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.26)})}catch(e){}}
+function playOriginalVoice(t){let a=$('audio-himari'),b=$('audio-mitsuki');a.pause();b.pause();let x=t==='himari'?a:b;x.currentTime=0;x.play().catch(()=>{$('feedback').textContent='點擊語音按鈕即可播放原聲。'});}
+const prompts=[['寫出星期三的英文。','Wednesday'],['寫出星期二的英文。','Tuesday'],['寫出星期四的英文。','Thursday'],['回答：What time do you go to school? (7:20)','I go to school at 7:20.'],['把 I go to the zoo at seven thirty. 改成問地點的問句。','Where do you go at seven thirty?'],['改正：How much is the tickets?','How much are the tickets?']];let pi=0,board,ctx,drawing=false;
+function updatePrompt(){$('write-prompt').textContent=(pi+1)+'. '+prompts[pi][0];$('write-answer').textContent=prompts[pi][1];$('write-counter').textContent=`第 ${pi+1} / ${prompts.length} 題`;}
+function changePrompt(d){pi=(pi+d+prompts.length)%prompts.length;updatePrompt();clearBoard()}
+function resizeBoard(){board=$('board');if(!board)return;let old=board.width?board.toDataURL():null;let r=board.getBoundingClientRect(),d=window.devicePixelRatio||1;board.width=Math.max(1,Math.round(r.width*d));board.height=Math.round(240*d);ctx=board.getContext('2d');ctx.scale(d,d);ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#5e35b1';ctx.fillStyle='#fff';ctx.fillRect(0,0,r.width,240);}
+function clearBoard(){if(ctx){let r=board.getBoundingClientRect();ctx.fillStyle='#fff';ctx.fillRect(0,0,r.width,240)}}
+function saveBoard(){let a=document.createElement('a');a.href=board.toDataURL('image/png');a.download='偶像公主_手寫練習_'+(pi+1)+'.png';a.click()}
+function pos(e){let r=board.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]}
+window.addEventListener('load',()=>{updatePrompt();resizeBoard();board.addEventListener('pointerdown',e=>{drawing=true;board.setPointerCapture(e.pointerId);ctx.beginPath();ctx.moveTo(...pos(e))});board.addEventListener('pointermove',e=>{if(!drawing)return;ctx.lineTo(...pos(e));ctx.stroke()});['pointerup','pointercancel'].forEach(ev=>board.addEventListener(ev,()=>drawing=false));});
+</script>
+</body>
+</html>
