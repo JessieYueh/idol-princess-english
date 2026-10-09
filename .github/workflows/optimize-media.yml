@@ -1,0 +1,29 @@
+name: Optimize embedded game media
+on:
+  push:
+    paths:
+      - '.github/workflows/optimize-media.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extract inline images and audio
+        run: python scripts/externalize_assets.py
+      - name: Commit optimized files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add game.html index.html map.html play.html images media
+          if ! git diff --cached --quiet; then
+            git commit -m "Move embedded images and audio to cached asset files"
+            git push
+          fi
