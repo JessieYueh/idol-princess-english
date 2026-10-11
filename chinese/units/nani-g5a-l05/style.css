@@ -7,3 +7,6 @@
 
 .fallbackGlyph{display:none;width:1em;height:1em;fill:currentColor;vertical-align:middle}.font-pending #word .fontText{display:none}.font-pending .fallbackGlyph{display:inline-block}
 .board-tools{display:flex;justify-content:flex-end;width:min(100%,520px);margin:8px auto 0}#reloadFont{font-size:14px;font-weight:500;line-height:1.4;min-height:40px;padding:6px 10px;border-radius:9px}.board-tools + #board{margin-top:8px}
+
+/* Zhuyin uses system fonts so it never waits for the large practice font. */
+#pronunciation{font-family:system-ui,-apple-system,sans-serif;font-size:clamp(20px,5vw,26px);line-height:1.8;color:var(--blue);white-space:normal;overflow-wrap:anywhere;margin:0 0 12px;word-spacing:.35em}#wordSelect{font-family:MOEKai,system-ui,sans-serif}#charCatalog,#vocabCatalog{display:flex;flex-wrap:wrap;gap:10px 14px}.catalog-item{font-family:system-ui,-apple-system,sans-serif;max-width:100%;overflow-wrap:anywhere}
