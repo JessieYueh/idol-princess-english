@@ -1,0 +1,383 @@
+[
+  {
+    "q": "想找「誰做事／誰是……」，要用哪一格？",
+    "options": [
+      "主格",
+      "受格",
+      "所有格"
+    ],
+    "answer": 0,
+    "hint": "主格像主角，告訴你這句在說誰。"
+  },
+  {
+    "q": "動作對著誰，或動作的接收者，用哪一格？",
+    "options": [
+      "所有格",
+      "主格",
+      "受格"
+    ],
+    "answer": 2,
+    "hint": "受格接住動作，不只是配角。"
+  },
+  {
+    "q": "要說「誰的朋友」，friend 前面用哪一格？",
+    "options": [
+      "受格",
+      "所有格",
+      "主格"
+    ],
+    "answer": 1,
+    "hint": "所有格回答「誰的」，後面接人或物的名稱。"
+  },
+  {
+    "q": "「我」當句子的主角，選主格。",
+    "options": [
+      "me",
+      "my",
+      "I"
+    ],
+    "answer": 2,
+    "hint": "找表格的主格欄：I"
+  },
+  {
+    "q": "「我」接住動作，選受格。",
+    "options": [
+      "I",
+      "my",
+      "me"
+    ],
+    "answer": 2,
+    "hint": "找表格的受格欄：me"
+  },
+  {
+    "q": "「我的」用哪個詞？",
+    "options": [
+      "I",
+      "me",
+      "my"
+    ],
+    "answer": 2,
+    "hint": "找表格的所有格欄：my"
+  },
+  {
+    "q": "「你／你們」當句子的主角，選主格。",
+    "options": [
+      "you",
+      "your"
+    ],
+    "answer": 0,
+    "hint": "找表格的主格欄：you"
+  },
+  {
+    "q": "「你／你們」接住動作，選受格。",
+    "options": [
+      "you",
+      "your"
+    ],
+    "answer": 0,
+    "hint": "找表格的受格欄：you"
+  },
+  {
+    "q": "「你／你們的」用哪個詞？",
+    "options": [
+      "you",
+      "your"
+    ],
+    "answer": 1,
+    "hint": "找表格的所有格欄：your"
+  },
+  {
+    "q": "「我們」當句子的主角，選主格。",
+    "options": [
+      "us",
+      "our",
+      "we"
+    ],
+    "answer": 2,
+    "hint": "找表格的主格欄：we"
+  },
+  {
+    "q": "「我們」接住動作，選受格。",
+    "options": [
+      "we",
+      "our",
+      "us"
+    ],
+    "answer": 2,
+    "hint": "找表格的受格欄：us"
+  },
+  {
+    "q": "「我們的」用哪個詞？",
+    "options": [
+      "we",
+      "us",
+      "our"
+    ],
+    "answer": 2,
+    "hint": "找表格的所有格欄：our"
+  },
+  {
+    "q": "「他們」當句子的主角，選主格。",
+    "options": [
+      "them",
+      "their",
+      "they"
+    ],
+    "answer": 2,
+    "hint": "找表格的主格欄：they"
+  },
+  {
+    "q": "「他們」接住動作，選受格。",
+    "options": [
+      "they",
+      "their",
+      "them"
+    ],
+    "answer": 2,
+    "hint": "找表格的受格欄：them"
+  },
+  {
+    "q": "「他們的」用哪個詞？",
+    "options": [
+      "they",
+      "them",
+      "their"
+    ],
+    "answer": 2,
+    "hint": "找表格的所有格欄：their"
+  },
+  {
+    "q": "「他」當句子的主角，選主格。",
+    "options": [
+      "him",
+      "his",
+      "he"
+    ],
+    "answer": 2,
+    "hint": "找表格的主格欄：he"
+  },
+  {
+    "q": "「他」接住動作，選受格。",
+    "options": [
+      "he",
+      "his",
+      "him"
+    ],
+    "answer": 2,
+    "hint": "找表格的受格欄：him"
+  },
+  {
+    "q": "「他的」用哪個詞？",
+    "options": [
+      "he",
+      "him",
+      "his"
+    ],
+    "answer": 2,
+    "hint": "找表格的所有格欄：his"
+  },
+  {
+    "q": "「她」當句子的主角，選主格。",
+    "options": [
+      "her",
+      "she"
+    ],
+    "answer": 1,
+    "hint": "找表格的主格欄：she"
+  },
+  {
+    "q": "「她」接住動作，選受格。",
+    "options": [
+      "she",
+      "her"
+    ],
+    "answer": 1,
+    "hint": "找表格的受格欄：her"
+  },
+  {
+    "q": "「她的」用哪個詞？",
+    "options": [
+      "she",
+      "her"
+    ],
+    "answer": 1,
+    "hint": "找表格的所有格欄：her"
+  },
+  {
+    "q": "「它」當句子的主角，選主格。",
+    "options": [
+      "it",
+      "its"
+    ],
+    "answer": 0,
+    "hint": "找表格的主格欄：it"
+  },
+  {
+    "q": "「它」接住動作，選受格。",
+    "options": [
+      "it",
+      "its"
+    ],
+    "answer": 0,
+    "hint": "找表格的受格欄：it"
+  },
+  {
+    "q": "「它的」用哪個詞？",
+    "options": [
+      "it",
+      "its"
+    ],
+    "answer": 1,
+    "hint": "找表格的所有格欄：its"
+  },
+  {
+    "q": "I ___ John.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 0,
+    "hint": "I 的專屬搭檔是 am。"
+  },
+  {
+    "q": "You ___ my teacher.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "you 不管一人或多人都配 are。"
+  },
+  {
+    "q": "He ___ a boy.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "he 是一個他，配 is。"
+  },
+  {
+    "q": "She ___ a girl.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "she 是一個她，配 is。"
+  },
+  {
+    "q": "It ___ a dog.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "it 是一個它，配 is。"
+  },
+  {
+    "q": "We ___ good friends.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "we 是我們，有多人，配 are。"
+  },
+  {
+    "q": "You ___ boys and girls.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "you 不管一人或多人都配 are。"
+  },
+  {
+    "q": "They ___ my parents.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "they 是他們，配 are。"
+  },
+  {
+    "q": "They ___ books.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "they 也能指多個物品，配 are。"
+  },
+  {
+    "q": "He ___ my friend.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "he 配 is。"
+  },
+  {
+    "q": "They ___ my friends.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 2,
+    "hint": "they 配 are。"
+  },
+  {
+    "q": "It ___ my cat.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "it 配 is。"
+  },
+  {
+    "q": "Mary ___ a student.",
+    "options": [
+      "am",
+      "is",
+      "are"
+    ],
+    "answer": 1,
+    "hint": "Mary 是一個人，像 she 一樣配 is。"
+  },
+  {
+    "q": "You are ___ teacher.（你是我的老師。）",
+    "options": [
+      "I",
+      "me",
+      "my"
+    ],
+    "answer": 2,
+    "hint": "teacher 是人的名稱；「我的」用 my。"
+  },
+  {
+    "q": "He is my friend. 這句的主格是？",
+    "options": [
+      "He",
+      "my",
+      "friend"
+    ],
+    "answer": 0,
+    "hint": "誰是朋友？是 He。my 表示誰的。"
+  }
+]
