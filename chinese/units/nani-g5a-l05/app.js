@@ -39,19 +39,8 @@ async function loadPracticeFont(){
  try{
   if(!document.fonts||typeof FontFace==='undefined')throw Error('Font loading unavailable');
   // A fresh FontFace makes retry possible after a failed download.
-  const loading=(async()=>{
-   const parts=await Promise.all(Array.from({length:18},async(_,i)=>{
-    const r=await fetch('./fonts/moe-kai-5.1.part-'+String(i).padStart(2,'0'));
-    if(!r.ok)throw Error('Font download failed');
-    return new Uint8Array(await r.arrayBuffer());
-   }));
-   const size=parts.reduce((n,p)=>n+p.length,0);
-   if(size!==8791000)throw Error('Incomplete font');
-   const bytes=new Uint8Array(size);let offset=0;
-   for(const part of parts){bytes.set(part,offset);offset+=part.length;}
-   return new FontFace('MOEKai',bytes.buffer).load();
-  })();
-  const face=await Promise.race([loading,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Font loading timeout')),45000)})]);
+  const face=new FontFace('MOEKai','url("./fonts/moe-kai-5.1.woff2") format("woff2")');
+  await Promise.race([face.load(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Font loading timeout')),45000)})]);
   if(ticket!==fontLoadVersion)return;
   for(const old of [...document.fonts])if(old.family==='MOEKai')document.fonts.delete(old);
   document.fonts.add(face);
