@@ -14,12 +14,50 @@ function ink(){return data.ink[wi]||(data.ink[wi]=[])}
 function progress(){const ids=indices(),count=ids.filter(i=>data.done[i]).length;$('progress').textContent=`${mode==='char'?'生字':'語詞'}練習 ${count} / ${ids.length}`;$('start').disabled=count!==ids.length;$('start').textContent=`② ${mode==='char'?'生字':'語詞'}練完，開始測驗 →`;$('done').disabled=!practiceReady()||active!==null||!ink().length;$('done').textContent=mode==='char'?'已對照範字，完成並下一字 →':'已對照範字，完成並下一詞 →'}
 const c=$('board'),ctx=c.getContext('2d');
 function render(){const r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);const W=r.width,H=r.height,n=Array.from(data.words[wi].word).length,cols=n<=2?n:Math.ceil(n/2),rows=Math.ceil(n/cols),size=Math.min(W/cols,H/rows),ox=(W-cols*size)/2,oy=(H-rows*size)/2;ctx.strokeStyle='#e3bbd4';ctx.lineWidth=1;Array.from(data.words[wi].word).forEach((ch,i)=>{const x=ox+(i%cols)*size,y=oy+Math.floor(i/cols)*size;ctx.setLineDash([]);ctx.strokeRect(x,y,size,size);ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(x+size/2,y);ctx.lineTo(x+size/2,y+size);ctx.moveTo(x,y+size/2);ctx.lineTo(x+size,y+size/2);ctx.stroke();if(fontReady&&$('trace').checked){ctx.fillStyle='#d6c9db';ctx.font=`${size*.72}px "MOEKai"`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ch,x+size/2,y+size*.53)}else if(glyphs&&$('trace').checked&&glyphs.paths[ch]){const fsize=size*.72,scale=fsize/glyphs.units;ctx.save();ctx.fillStyle='#d6c9db';ctx.translate(x+(size-fsize)/2,y+size*.53+(glyphs.ascent+glyphs.descent)/glyphs.units*fsize/2);ctx.scale(scale,-scale);ctx.fill(new Path2D(glyphs.paths[ch]));ctx.restore()}});ctx.setLineDash([]);ctx.strokeStyle='#6336a0';ctx.fillStyle='#6336a0';ctx.lineCap='round';ctx.lineJoin='round';for(const s of [...ink(),...(stroke?[stroke]:[])]){s.forEach((p,i)=>{ctx.lineWidth=2.5+p[2]*2;ctx.beginPath();if(i){const a=s[i-1];ctx.moveTo(a[0]*W,a[1]*H);ctx.lineTo(p[0]*W,p[1]*H);ctx.stroke()}else{ctx.arc(p[0]*W,p[1]*H,ctx.lineWidth/2,0,Math.PI*2);ctx.fill()}})}$('undo').disabled=!ink().length;$('redo').disabled=!redo.length}
-function showWord(){active=null;stroke=null;redo=[];$('wordSelect').value=wi;$('word').textContent=data.words[wi].word;showFallbackWord();$('meaning').textContent=data.words[wi].meaning;$('writeStatus').textContent='寫完後自行對照範字，按「完成」繼續。不自動檢查筆畫或字形。';progress();render()}
+function showWord(){if(active!==null)finish({pointerId:active});unlockWritingScroll();active=null;stroke=null;redo=[];$('wordSelect').value=wi;$('word').textContent=data.words[wi].word;showFallbackWord();$('meaning').textContent=data.words[wi].meaning;$('writeStatus').textContent='寫完後自行對照範字，按「完成」繼續。不自動檢查筆畫或字形。';progress();render()}
 function point(e){const r=c.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.pressure||.5]}
-c.addEventListener('pointerdown',e=>{if(!practiceReady()||active!==null||($('penOnly').checked&&e.pointerType!=='pen')||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();data.done[wi]=false;active=e.pointerId;stroke=[point(e)];progress();updateSelector();c.setPointerCapture(active);render()});
+let scrollLock=null,strokeWord=null;
+function lockWritingScroll(){
+ if(scrollLock)return;
+ const body=document.body,keys=['position','top','left','right','width'];
+ scrollLock={x:window.scrollX||0,y:window.scrollY||0,styles:keys.map(k=>[k,body.style[k]])};
+ body.style.position='fixed';body.style.top=-scrollLock.y+'px';body.style.left=-scrollLock.x+'px';body.style.right='0';body.style.width='100%';
+}
+function unlockWritingScroll(){
+ if(!scrollLock)return;const saved=scrollLock;scrollLock=null;
+ for(const [key,value] of saved.styles)document.body.style[key]=value;
+ window.scrollTo(saved.x,saved.y);
+}
+function beginStroke(id,p){data.done[wi]=false;strokeWord=wi;active=id;lockWritingScroll();stroke=[point(p)];progress();updateSelector();render()}
+c.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||!practiceReady()||active!==null||($('penOnly').checked&&e.pointerType!=='pen')||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();beginStroke(e.pointerId,e);try{c.setPointerCapture(active)}catch(error){}},{passive:false});
 c.addEventListener('pointermove',e=>{if(active!==e.pointerId)return;e.preventDefault();for(const p of (e.getCoalescedEvents?.()||[e]))stroke.push(point(p));render()});
-function finish(e){if(active!==e.pointerId)return;data.done[wi]=false;ink().push(stroke);stroke=null;active=null;redo=[];save();progress();updateSelector();render()}
+function finish(e){if(active===null||active!==e.pointerId)return;data.done[strokeWord]=false;(data.ink[strokeWord]||(data.ink[strokeWord]=[])).push(stroke);stroke=null;strokeWord=null;active=null;unlockWritingScroll();redo=[];save();progress();updateSelector();render()}
 for(const evt of ['pointerup','pointercancel','lostpointercapture'])c.addEventListener(evt,finish);
+// Handle finger writing directly so iOS cannot turn a stroke into a page pan.
+const blockTouchScroll=e=>{if(e.cancelable)e.preventDefault()};
+const touchPoint=t=>({clientX:t.clientX,clientY:t.clientY,pressure:t.force||.5});
+c.addEventListener('touchstart',e=>{
+ blockTouchScroll(e);
+ if(!practiceReady()||active!==null)return;
+ const t=e.changedTouches[0];if(!t||($('penOnly').checked&&t.touchType!=='stylus'))return;
+ beginStroke('touch:'+t.identifier,touchPoint(t));
+},{passive:false});
+c.addEventListener('touchmove',e=>{
+ blockTouchScroll(e);if(typeof active!=='string')return;
+ const t=Array.from(e.changedTouches).find(t=>'touch:'+t.identifier===active);
+ if(t){stroke.push(point(touchPoint(t)));render()}
+},{passive:false});
+document.addEventListener('touchmove',e=>{if(active!==null)blockTouchScroll(e)},{passive:false});
+function endTouch(e){
+ if(typeof active!=='string')return;
+ const t=Array.from(e.changedTouches).find(t=>'touch:'+t.identifier===active);
+ if(t)finish({pointerId:active});
+}
+for(const evt of ['touchend','touchcancel'])document.addEventListener(evt,endTouch,{passive:false});
+for(const evt of ['pointerup','pointercancel'])document.addEventListener(evt,finish);
+const stopWriting=()=>{if(active!==null)finish({pointerId:active});else unlockWritingScroll()};
+window.addEventListener('blur',stopWriting);window.addEventListener('pagehide',stopWriting);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopWriting()});
 new ResizeObserver(()=>{if(!$('practice').hidden)render()}).observe(c);
 $('undo').onclick=()=>{data.done[wi]=false;if(ink().length)redo.push(ink().pop());save();progress();updateSelector();render()};$('redo').onclick=()=>{data.done[wi]=false;if(redo.length)ink().push(redo.pop());save();progress();updateSelector();render()};$('clear').onclick=()=>{redo.push(...ink().reverse());data.ink[wi]=[];data.done[wi]=false;save();progress();updateSelector();render()};$('trace').onchange=render;$('wordSelect').onchange=()=>{const wanted=Number($('wordSelect').value),first=indices().find(i=>!data.done[i]);if(mode==='char'&&first!==undefined&&wanted>first){$('wordSelect').value=wi;return}wi=wanted;showWord()};
 $('done').onclick=()=>{if(!practiceReady()||active!==null)return;if(!ink().length){$('writeStatus').textContent='先在田字格寫一遍，再完成喔。';return}data.done[wi]=true;save();updateSelector();const next=indices().find(i=>!data.done[i]);if(next!==undefined)wi=next;showWord()};
