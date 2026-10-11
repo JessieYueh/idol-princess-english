@@ -5,4 +5,4 @@
 /* MOEKai is loaded explicitly by app.js before practice becomes visible. */
 #word,#wordSelect,#options button{font-family:MOEKai}#word{font-size:64px;line-height:1.3}#board{aspect-ratio:1/1;width:min(100%,520px);margin:16px auto}#wordSelect option:disabled{color:#aaa}
 
-.font-pending #word,.font-pending #board,.font-pending #wordSelect,.font-pending #options{visibility:hidden}.font-pending #board{pointer-events:none}
+.fallbackGlyph{display:none;width:1em;height:1em;fill:currentColor;vertical-align:middle}.font-pending #word .fontText{display:none}.font-pending .fallbackGlyph{display:inline-block}
