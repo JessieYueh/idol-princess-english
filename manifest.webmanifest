@@ -1,0 +1,22 @@
+{
+  "name": "英文冒險學習中心",
+  "short_name": "英文冒險",
+  "description": "森林探險地圖與英文練習遊戲",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf6e9",
+  "theme_color": "#b8dfc4",
+  "icons": [
+    {
+      "src": "./icons/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
