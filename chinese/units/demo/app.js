@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id),KEY='chinese-demo-v1';
 const defaults=[{word:'已經',wrong:'以經',meaning:'事情完成，或情況出現了。'},{word:'再見',wrong:'在見',meaning:'分別時說的話。'},{word:'練習',wrong:'鍊習',meaning:'反覆學習，讓自己更熟練。'},{word:'勇敢',wrong:'勇感',meaning:'有勇氣面對困難。'}];
 let data={title:'示範課｜容易寫錯的語詞',words:defaults,done:{},ink:{},theme:'princess'},wi=0,active=null,stroke=null,redo=[],qi=0,answers=[],missed=false,locked=false;
 try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&Array.isArray(saved.words)&&saved.words.length&&saved.words.every(w=>typeof w.word==='string'&&w.word.length&&w.word.length<=6&&typeof w.wrong==='string'&&typeof w.meaning==='string'))data={...data,...saved}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data));$('writeStatus').textContent='筆跡已保存在此瀏覽器。'}catch(e){$('writeStatus').textContent='瀏覽器無法保存；請保持本頁開啟。'}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));$('writeStatus').textContent=''}catch(e){$('writeStatus').textContent='瀏覽器無法保存；請保持本頁開啟。'}}
 function sync(){document.body.classList.toggle('forest',data.theme==='forest');$('theme').value=data.theme;$('title').textContent=data.title;$('lessonTitle').value=data.title;$('editor').value=data.words.map(w=>[w.word,w.wrong,w.meaning].join(' | ')).join('\n');$('wordSelect').replaceChildren(...data.words.map((w,i)=>{const o=document.createElement('option');o.value=i;o.textContent=w.word;return o}));showWord()}
 function ink(){return data.ink[wi]||(data.ink[wi]=[])}
 function progress(){const count=data.words.filter((_,i)=>data.done[i]).length;$('progress').textContent=`練字 ${count} / ${data.words.length}`;$('start').disabled=count!==data.words.length;$('done').textContent=data.done[wi]?'已完成 ✓（可繼續練習）':'已對照範字，完成這一詞 ✓'}

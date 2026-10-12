@@ -16,7 +16,7 @@ const supplementaryWords=["吹皺", "太魯閣", "穿梭", "奇形怪狀", "鹹�
 for(const w of defaults.filter(w=>supplementaryWords.includes(w.word)))if(!data.words.some(old=>old.word===w.word))data.words.push({...w});
 let glyphs=null;
 let fontReady=false,fontLoadVersion=0;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data));$('writeStatus').textContent='筆跡已保存在此瀏覽器。'}catch(e){$('writeStatus').textContent='瀏覽器無法保存；請保持本頁開啟。'}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));$('writeStatus').textContent=''}catch(e){$('writeStatus').textContent='瀏覽器無法保存；請保持本頁開啟。'}}
 function indices(){return data.words.map((w,i)=>i).filter(i=>(data.words[i].kind||'vocab')===mode)}
 function sync(){document.body.classList.toggle('forest',data.theme==='forest');$('theme').value=data.theme;$('title').textContent=data.title;$('lessonTitle').value=data.title;$('editor').value=data.words.filter(w=>w.kind!=='char').map(w=>[w.word,w.wrong,w.meaning,pronunciationFor(w)].join(' | ')).join('\n');showCatalog();updateSelector();showWord()}
 function updateSelector(){const ids=indices();if(!ids.includes(wi))wi=ids[0];$('wordSelect').replaceChildren(...ids.map(i=>{const o=document.createElement('option');o.value=i;o.textContent=annotatedWord(data.words[i]);if(mode==='char'){const first=indices().find(j=>!data.done[j]);o.disabled=first!==undefined&&i>first}return o}));$('charMode').setAttribute('aria-pressed',String(mode==='char'));$('vocabMode').setAttribute('aria-pressed',String(mode==='vocab'))}
