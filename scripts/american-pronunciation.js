@@ -8,7 +8,7 @@ function speak(text,status){
  const voices=synth.getVoices();
  u.voice=voices.find(v=>v.lang.toLowerCase()==='en-us'&&/premium|enhanced|natural/i.test(v.name))||voices.find(v=>v.lang.toLowerCase()==='en-us')||null;
  u.onerror=()=>{if(status)status.textContent='語音播放失敗，可使用劍橋字典聽美式發音。';};
- if(status)status.textContent='🔊 美式英語發音：'+text;
+ if(status)status.textContent='';
  synth.speak(u);
 }
 window.AmericanPronunciation={speak};
