@@ -15,4 +15,4 @@ try{
  this.contentDocument.body.appendChild(s);
 }catch(e){console.warn('Pencil upgrade unavailable',e)}
 });
-</script></body></html>
+</script><script>window.addEventListener('message',function(e){if(e.origin!==location.origin||!e.data||e.data.type!=='open-dictionary')return;try{const u=new URL(e.data.url);if(u.hostname!=='dictionary.cambridge.org')return;window.open(u.href,'_blank','noopener,noreferrer');}catch(_){}});</script></body></html>
