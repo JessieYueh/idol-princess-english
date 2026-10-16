@@ -135,6 +135,9 @@
     padding: 15px 34px; border-radius: 26px; font-size: 1.3rem; font-weight: 800;
     cursor: pointer; box-shadow: 0 5px 15px rgba(255, 64, 129, 0.45);
   }
+
+/* 單字複習與默寫 */
+.vocab-list{display:grid;gap:12px;margin:14px 0}.vocab-card{background:#fff;border:2px solid #f8bbd0;border-radius:16px;padding:14px}.vocab-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.vocab-word{font-size:1.5rem;font-weight:850;color:#7b1fa2}.vocab-zh{font-size:1.18rem;font-weight:750;color:#234}.vocab-example{font-size:1.12rem;line-height:1.6;margin:8px 0;color:#345}.vocab-actions{display:flex;flex-wrap:wrap;gap:8px}.vocab-actions button,.vocab-actions a{font-size:1rem;font-weight:750;padding:9px 12px;border-radius:11px;border:2px solid #b9a2df;background:#f6f0ff;color:#58358b;text-decoration:none;cursor:pointer}.vocab-actions button:focus-visible,.vocab-actions a:focus-visible{outline:3px solid #0288d1}.vocab-status{font-size:.95rem;color:#67428a;min-height:1.4em}.vocab-write-title{font-size:1.25rem;color:#7b1fa2;font-weight:800}.vocab-write-prompt{font-size:1.2rem;font-weight:750}.vocab-write-area{display:block;width:100%;height:230px;border:3px dashed #b388d7;border-radius:16px;background:#fff;touch-action:none;user-select:none;-webkit-user-select:none}.vocab-write-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.vocab-write-actions button{padding:11px 14px;border-radius:12px;border:2px solid #b388d7;background:#fff;font-size:1rem;font-weight:750;color:#634197}.vocab-write-answer{font-size:1.3rem;font-weight:800;color:#4a148c}
 </style>
 
 <style>
@@ -214,6 +217,17 @@
       • 表達喜歡動物時要用複數：<span class="hl-red">I like panda. ❌</span> ➔ <span class="hl-green">I like <b>pandas</b>. ⭕</span></p>
     </div>
 
+
+<section class="note-box" id="vocab-sec" aria-label="單字複習與默寫">
+<h3>📚 單字星光複習卡</h3><p>中英對照、例句、點一下聽發音；也可以查劍橋字典。先看單字，再到下方默寫！</p>
+<div id="vocab-list" class="vocab-list"></div>
+<div class="vocab-status" id="vocab-status" aria-live="polite"></div>
+<h3>✍️ 單字默寫練習區</h3><p>先看中文提示，在下方用 Apple Pencil 寫英文。寫完再打開答案。</p>
+<div class="vocab-write-title" id="vocab-write-count"></div><p class="vocab-write-prompt" id="vocab-write-prompt"></p>
+<div class="vocab-write-actions"><button type="button" onclick="vocabMove(-1)">⬅ 上一個</button><button type="button" onclick="vocabMove(1)">下一個 ➡</button><button type="button" onclick="vocabUndo()">↶ 復原</button><button type="button" onclick="vocabRedo()">↷ 重做</button><button type="button" onclick="vocabClear()">🧽 清除</button></div>
+<canvas id="vocab-board" class="vocab-write-area" aria-label="單字默寫手寫區"></canvas>
+<details id="vocab-answer-box"><summary>💡 查看英文答案</summary><p class="vocab-write-answer" id="vocab-write-answer"></p></details>
+</section>
     <button class="btn-start" onclick="startQuiz()">💖 開始 13 題星光小測驗 ➔</button>
   </div>
 
@@ -332,6 +346,35 @@ function clearBoard(){if(ctx){let r=board.getBoundingClientRect();ctx.fillStyle=
 function saveBoard(){let a=document.createElement('a');a.href=board.toDataURL('image/png');a.download='偶像公主_手寫練習_'+(pi+1)+'.png';a.click()}
 function pos(e){let r=board.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]}
 window.addEventListener('load',()=>{updatePrompt();resizeBoard();board.addEventListener('pointerdown',e=>{drawing=true;board.setPointerCapture(e.pointerId);ctx.beginPath();ctx.moveTo(...pos(e))});board.addEventListener('pointermove',e=>{if(!drawing)return;ctx.lineTo(...pos(e));ctx.stroke()});['pointerup','pointercancel'].forEach(ev=>board.addEventListener(ev,()=>drawing=false));});
+
+// 單字卡以本單元現有講義筆記與題目中的詞彙為基礎。
+const vocabWords=[
+{en:'Monday',zh:'星期一',ex:'It is Monday.'},
+{en:'Tuesday',zh:'星期二',ex:'It is Tuesday.'},
+{en:'Wednesday',zh:'星期三',ex:'It is Wednesday.'},
+{en:'Thursday',zh:'星期四',ex:'It is Thursday.'},
+{en:'Friday',zh:'星期五',ex:'It is Friday.'},
+{en:'Saturday',zh:'星期六',ex:'It is Saturday.'},
+{en:'Sunday',zh:'星期日',ex:'It is Sunday.'},
+{en:'today',zh:'今天',ex:'What day is today?'},
+{en:'school',zh:'學校',ex:'I go to school at 7:20.'},
+{en:'zoo',zh:'動物園',ex:'I go to the zoo at seven thirty.'},
+{en:'ticket',zh:'票；門票',ex:'How much are the tickets?'},
+{en:'panda',zh:'熊貓',ex:'I like pandas.'},
+{en:'go',zh:'去',ex:'Where do you go at seven thirty?'},
+{en:'time',zh:'時間',ex:'What time do you go to school?'}
+];
+let vocabIndex=0,vocabCanvas,vocabCtx,vocabHistory=[],vocabFuture=[],vocabDrawing=false,vocabPointer=null;
+function vocabSpeak(word){const status=document.getElementById('vocab-status');if(!('speechSynthesis' in window)){status.textContent='此瀏覽器不支援語音朗讀，可使用劍橋字典聽發音。';return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang='en-US';u.rate=.8;u.onerror=()=>status.textContent='發音暫時無法播放，請使用劍橋字典。';status.textContent='🔊 正在朗讀：'+word;window.speechSynthesis.speak(u);}
+function vocabRender(){const list=document.getElementById('vocab-list');list.textContent='';for(const item of vocabWords){const card=document.createElement('div');card.className='vocab-card';const top=document.createElement('div');top.className='vocab-top';const word=document.createElement('span');word.className='vocab-word';word.textContent=item.en;const zh=document.createElement('span');zh.className='vocab-zh';zh.textContent=item.zh;top.append(word,zh);const example=document.createElement('p');example.className='vocab-example';example.textContent='例句：'+item.ex;const actions=document.createElement('div');actions.className='vocab-actions';const speak=document.createElement('button');speak.type='button';speak.textContent='🔊 單字發音';speak.addEventListener('click',()=>vocabSpeak(item.en));const sentence=document.createElement('button');sentence.type='button';sentence.textContent='🔊 例句發音';sentence.addEventListener('click',()=>vocabSpeak(item.ex));const dict=document.createElement('a');dict.textContent='📖 劍橋字典';dict.target='_blank';dict.rel='noopener noreferrer';dict.href='https://dictionary.cambridge.org/zht/詞典/英語-漢語-繁體/'+encodeURIComponent(item.en.toLowerCase());actions.append(speak,sentence,dict);card.append(top,example,actions);list.append(card);}vocabShow();}
+function vocabShow(){const item=vocabWords[vocabIndex];document.getElementById('vocab-write-count').textContent='第 '+(vocabIndex+1)+' / '+vocabWords.length+' 個單字';document.getElementById('vocab-write-prompt').textContent='請默寫：'+item.zh;document.getElementById('vocab-write-answer').textContent=item.en+' — '+item.ex;document.getElementById('vocab-answer-box').open=false;vocabClear();}
+function vocabMove(n){vocabIndex=(vocabIndex+n+vocabWords.length)%vocabWords.length;vocabShow();}
+function vocabSnapshot(){if(!vocabCanvas)return;vocabHistory.push(vocabCtx.getImageData(0,0,vocabCanvas.width,vocabCanvas.height));if(vocabHistory.length>30)vocabHistory.shift();vocabFuture=[];}
+function vocabUndo(){if(!vocabHistory.length)return;vocabFuture.push(vocabCtx.getImageData(0,0,vocabCanvas.width,vocabCanvas.height));vocabCtx.putImageData(vocabHistory.pop(),0,0);}
+function vocabRedo(){if(!vocabFuture.length)return;vocabHistory.push(vocabCtx.getImageData(0,0,vocabCanvas.width,vocabCanvas.height));vocabCtx.putImageData(vocabFuture.pop(),0,0);}
+function vocabClear(){if(!vocabCtx)return;vocabSnapshot();vocabCtx.clearRect(0,0,vocabCanvas.width,vocabCanvas.height);}
+function vocabInit(){vocabCanvas=document.getElementById('vocab-board');const ratio=window.devicePixelRatio||1;const width=vocabCanvas.getBoundingClientRect().width;vocabCanvas.width=Math.round(width*ratio);vocabCanvas.height=Math.round(230*ratio);vocabCtx=vocabCanvas.getContext('2d');vocabCtx.lineWidth=3.5*ratio;vocabCtx.lineCap='round';vocabCtx.lineJoin='round';vocabCtx.strokeStyle='#6941a5';const pos=e=>{const rect=vocabCanvas.getBoundingClientRect();return [(e.clientX-rect.left)*vocabCanvas.width/rect.width,(e.clientY-rect.top)*vocabCanvas.height/rect.height]};vocabCanvas.addEventListener('pointerdown',e=>{if(vocabDrawing)return;vocabDrawing=true;vocabPointer=e.pointerId;vocabCanvas.setPointerCapture(e.pointerId);vocabSnapshot();const [x,y]=pos(e);vocabCtx.beginPath();vocabCtx.moveTo(x,y);vocabCtx.lineTo(x+.01,y+.01);vocabCtx.stroke();e.preventDefault()});vocabCanvas.addEventListener('pointermove',e=>{if(!vocabDrawing||e.pointerId!==vocabPointer)return;for(const p of e.getCoalescedEvents?.()||[e]){const [x,y]=pos(p);vocabCtx.lineTo(x,y);vocabCtx.stroke();}e.preventDefault()});for(const type of ['pointerup','pointercancel','lostpointercapture'])vocabCanvas.addEventListener(type,e=>{if(e.pointerId===vocabPointer){vocabDrawing=false;vocabPointer=null;}});vocabRender();}
+window.addEventListener('load',vocabInit);
 </script>
 </body>
 </html>
