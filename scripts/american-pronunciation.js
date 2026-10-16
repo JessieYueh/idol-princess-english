@@ -1,7 +1,15 @@
-/* US English dictionary recordings; robust iOS fallback. */
+/* Instant US pronunciation. No network requests in the button click path. */
 (function(){'use strict';
-const cache=new Map();let player=null,sequence=0;
-function fallback(text,status){if(!('speechSynthesis' in window)){if(status)status.textContent='此裝置無法朗讀，請使用劍橋字典。';return;}const synth=window.speechSynthesis;synth.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.85;const voices=synth.getVoices();u.voice=voices.find(v=>v.lang.toLowerCase()==='en-us'&&/premium|enhanced|natural/i.test(v.name))||voices.find(v=>v.lang.toLowerCase()==='en-us')||null;u.onerror=()=>{if(status)status.textContent='播放失敗，請點選劍橋字典聆聽。';};if(status)status.textContent='🔊 美式英語語音：'+text;synth.speak(u);}
-async function speak(text,status){const id=++sequence;if(player){player.pause();player=null;}if('speechSynthesis'in window)window.speechSynthesis.cancel();const word=/^[a-z]+$/i.test(text.trim())?text.trim().toLowerCase():null;if(!word){fallback(text,status);return;}if(status)status.textContent='🔊 正在準備美式發音…';try{let url=cache.get(word);if(url===undefined){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),2500);let res;try{res=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(word),{signal:controller.signal});}finally{clearTimeout(timer);}if(!res.ok)throw Error('dictionary unavailable');const data=await res.json();const phonetics=data.flatMap(x=>x.phonetics||[]);const us=phonetics.find(p=>p.audio&&/(?:-us\.|\/us\/|us\.mp3)/i.test(p.audio));url=us?us.audio:null;cache.set(word,url);}if(id!==sequence)return;if(!url)throw Error('US recording unavailable');const audio=new Audio(url.startsWith('//')?'https:'+url:url);player=audio;await audio.play();if(id!==sequence){audio.pause();return;}if(status)status.textContent='🔊 美式字典錄音：'+text;}catch(e){if(id===sequence)fallback(text,status);}}
+let utterance=null;
+function speak(text,status){
+ if(!('speechSynthesis' in window)){if(status)status.textContent='裝置不支援語音朗讀，請使用劍橋字典。';return;}
+ const synth=window.speechSynthesis;synth.cancel();
+ const u=new SpeechSynthesisUtterance(text);utterance=u;u.lang='en-US';u.rate=.88;u.pitch=1;
+ const voices=synth.getVoices();
+ u.voice=voices.find(v=>v.lang.toLowerCase()==='en-us'&&/premium|enhanced|natural/i.test(v.name))||voices.find(v=>v.lang.toLowerCase()==='en-us')||null;
+ u.onerror=()=>{if(status)status.textContent='語音播放失敗，可使用劍橋字典聽美式發音。';};
+ if(status)status.textContent='🔊 美式英語發音：'+text;
+ synth.speak(u);
+}
 window.AmericanPronunciation={speak};
 })();
