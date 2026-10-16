@@ -221,7 +221,7 @@
 <section class="note-box" id="vocab-sec" aria-label="單字複習與默寫">
 <h3>📚 單字星光複習卡</h3><p>中英對照、例句、點一下聽發音；也可以查劍橋字典。先看單字，再到下方默寫！</p>
 <div id="vocab-list" class="vocab-list"></div>
-<div class="vocab-status" id="vocab-status" aria-live="polite"></div>
+
 <h3>✍️ 單字默寫練習區</h3><p>先看中文提示，在下方用 Apple Pencil 寫英文。寫完再打開答案。</p>
 <div class="vocab-write-title" id="vocab-write-count"></div><p class="vocab-write-prompt" id="vocab-write-prompt" role="heading" aria-level="3"></p>
 <div class="vocab-write-actions"><button type="button" onclick="vocabMove(-1)">⬅ 上一個</button><button type="button" onclick="vocabMove(1)">下一個 ➡</button><button type="button" onclick="vocabUndo()">↶ 復原</button><button type="button" onclick="vocabRedo()">↷ 重做</button><button type="button" onclick="vocabClear()">🧽 清除</button></div>
@@ -389,5 +389,5 @@ function vocabInit(){
 }
 window.addEventListener('load',vocabInit);
 </script>
-<script src="../../scripts/american-pronunciation.js?v=20261017c"></script><script>vocabSpeak=function(word){AmericanPronunciation.speak(word,document.getElementById("vocab-status"));};</script></body>
+<script src="../../scripts/american-pronunciation.js?v=20261017d"></script><script>vocabSpeak=function(word){AmericanPronunciation.speak(word,null);};</script></body>
 </html>
