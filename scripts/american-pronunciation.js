@@ -1,15 +1,12 @@
-/* Instant US pronunciation. No network requests in the button click path. */
+/* Freely licensed US pronunciation recordings from Wikimedia Commons.
+   Preload in background, never delay click. Credit links retained in source metadata.
+   Some recordings are unavailable: immediate en-US speech fallback. */
 (function(){'use strict';
-let utterance=null;
-function speak(text,status){
- if(!('speechSynthesis' in window)){if(status)status.textContent='裝置不支援語音朗讀，請使用劍橋字典。';return;}
- const synth=window.speechSynthesis;synth.cancel();
- const u=new SpeechSynthesisUtterance(text);utterance=u;u.lang='en-US';u.rate=.88;u.pitch=1;
- const voices=synth.getVoices();
- u.voice=voices.find(v=>v.lang.toLowerCase()==='en-us'&&/premium|enhanced|natural/i.test(v.name))||voices.find(v=>v.lang.toLowerCase()==='en-us')||null;
- u.onerror=()=>{if(status)status.textContent='語音播放失敗，可使用劍橋字典聽美式發音。';};
- if(status)status.textContent='';
- synth.speak(u);
-}
-window.AmericanPronunciation={speak};
+const cache=new Map(),pending=new Map();let player=null,utterance=null,requestId=0;
+function speakDevice(text){if(!('speechSynthesis'in window))return;const synth=window.speechSynthesis;synth.cancel();const u=new SpeechSynthesisUtterance(text);utterance=u;u.lang='en-US';u.rate=.88;u.pitch=1;const voices=synth.getVoices();u.voice=voices.find(v=>v.lang.toLowerCase()==='en-us'&&/premium|enhanced|natural/i.test(v.name))||voices.find(v=>v.lang.toLowerCase()==='en-us')||null;synth.speak(u);}
+async function prepare(word){word=word.toLowerCase();if(cache.has(word))return cache.get(word);if(pending.has(word))return pending.get(word);
+const task=(async()=>{try{const titles=['File:En-us-'+word+'.ogg','File:En-us-'+word+'.mp3'];const u='https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url%7Cextmetadata&titles='+encodeURIComponent(titles.join('|'));const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),5000);let response;try{response=await fetch(u,{signal:controller.signal});}finally{clearTimeout(timer);}if(!response.ok)throw Error('unavailable');const json=await response.json();const pages=Object.values(json.query?.pages||{});let found=null;for(const page of pages){const info=page.imageinfo?.[0];if(!info?.url)continue;const license=info.extmetadata?.LicenseShortName?.value||'';if(!/^(CC BY|CC0|Public domain|PD)/i.test(license))continue;found={url:info.url,credit:info.descriptionurl,license};if(/\.mp3$/i.test(info.url))break;}if(!found)throw Error('no licensed recording');const audio=new Audio();audio.preload='auto';audio.src=found.url;audio.load();found.audio=audio;cache.set(word,found);return found;}catch(_){cache.set(word,null);return null;}finally{pending.delete(word);}})();pending.set(word,task);return task;}
+function preload(words){for(const w of words||[]){if(/^[a-z]+$/i.test(w))prepare(w);}}
+function speak(text,status){const id=++requestId;if(player){player.pause();player.currentTime=0;player=null;}if('speechSynthesis'in window)speechSynthesis.cancel();if(status)status.textContent='';const word=text.trim().toLowerCase();const item=/^[a-z]+$/i.test(word)?cache.get(word):null;if(item?.audio&&item.audio.readyState>=2){player=item.audio;player.currentTime=0;const p=player.play();if(p&&typeof p.catch==='function')p.catch(()=>{if(id===requestId)speakDevice(text);});return;}speakDevice(text);}
+window.AmericanPronunciation={speak,preload,prepare};
 })();
