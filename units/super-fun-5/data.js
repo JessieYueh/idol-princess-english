@@ -67,7 +67,7 @@ window.SF5 = {
  ['Tuesday 是哪一天？',['星期四','星期三','星期二'],2,'Tuesday 是星期二。'],
  ['「在星期一」怎麼說？',['at Monday','on Monday','in Monday'],1,'星期前使用 on。']
  ]},
- lesson2:{name:'Lesson 2',title:'What Time Do You Get Up?',zh:'日常作息與時間',subtitle:'do / does、at 和動詞，一次練會。',image:'galaxy.png',era:'Super Mario Galaxy · 2007',color:'#6650bb',
+ lesson2:{name:'Lesson 2',title:'What Time Do You Get Up?',zh:'日常作息與時間',subtitle:'do / does、at 和動詞，一次練會。',image:'odyssey.png',era:'Super Mario Odyssey · 2017',color:'#6650bb',
  words:[['get up','起床','I get up at six thirty.','get-up'],['go to school','上學','I go to school at seven twenty.','school'],['go home','回家','I go home at four.','home'],['eat dinner','吃晚餐','I eat dinner at six.','dinner'],['do my homework','做我的功課','I do my homework at seven.','homework'],['take a shower','洗澡／淋浴','I take a shower at eight.','shower'],['go to bed','上床睡覺','I go to bed at nine thirty.','bed'],['his','他的','He does his homework.','his'],['her','她的','She does her homework.','her']],
  notes:[['問你幾點做一件事','What time do you get up? → I get up at six thirty. 問你（you），回答換我（I）。'],['問他或她，用 does','What time does she go home? does 已經幫忙了，後面的 go 保持原形，不加 es。'],['回答他或她，動詞會變','He gets up. / She goes home. / He eats dinner. / She takes a shower. / He does his homework.'],['時間前的小幫手 at','at seven twenty = 在 7:20。星期前用 on；幾點前用 at。句子寫完記得句點。'],['功課是誰的？','I do my homework. / He does his homework. / She does her homework. he 是他，his 才是他的。'],['go home 沒有 to','go to school、go to bed 都有 to；go home 不加 to。先念整個片語再默寫。']],
  dialogs:[
