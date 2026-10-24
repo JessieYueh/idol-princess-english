@@ -1,7 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id), lessons=window.REVIEW_LESSONS;
 const KEY='idol-chinese-written-review-l01-l06-v1', labels={char:'生字',vocab:'語詞',poly:'多音字注音',shape:'形近字國字'};
-let state={lesson:1,items:{}},kind='all',retryIds=null,boards=new Map(),active=null,observer;
+let state={lesson:1,items:{}},kind='all',retryIds=null,boards=new Map(),active=null,observer,fingerWriting=true;
 try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.items&&typeof v.items==='object')state={lesson:Math.min(6,Math.max(1,Number(v.lesson)||1)),items:v.items}}catch(e){}
 let database=null;
 function persisted(){return{lesson:state.lesson,items:Object.fromEntries(Object.entries(state.items).map(([id,v])=>[id,{strokes:v.strokes,revealed:!!v.revealed,grade:v.grade}]))}}
@@ -33,7 +33,7 @@ function render(){finish();if(observer)observer.disconnect();boards.forEach(b=>b
  const qs=list();if(!qs.length)$('questions').append(el('p','這裡還沒有題目，請切換題型或按「顯示全部題目」。'));
  qs.forEach(q=>{const v=item(q),card=el('article',undefined,'question');card.id='q-'+q.id;const original=lesson().questions.indexOf(q)+1;
  const head=el('div',undefined,'qhead');head.append(el('span',`✦ ${String(original).padStart(2,'0')} / ${lesson().questions.length}`),el('span',labels[q.kind]));card.append(head,el('h2',q.prompt,'qtitle'),el('p',q.hint,'hint'));
- const work=el('div',undefined,'work'),writing=el('div',undefined,'writing'),canvas=el('canvas',undefined,'board');canvas.setAttribute('aria-label',`第 ${original} 題手寫區，Apple Pencil 書寫、手指捲動`);canvas.width=1;canvas.height=1;
+ const work=el('div',undefined,'work'),writing=el('div',undefined,'writing'),canvas=el('canvas',undefined,'board');canvas.setAttribute('aria-label',`第 ${original} 題手寫區，可用手指或 Apple Pencil 書寫`);canvas.width=1;canvas.height=1;
  const tools=el('div',undefined,'tools'),undo=btn('↶ 復原',()=>history(q,'undo')),redo=btn('↷ 重做',()=>history(q,'redo')),clearButton=btn('清除',()=>clear(q));tools.append(undo,redo,clearButton);writing.append(canvas,tools);
  const answer=el('aside',undefined,'answer'),cover=el('p','寫完後按「對答案」'),body=el('div',undefined,'answer-body');body.id='a-'+q.id;body.append(el('p','正確答案'),el('strong',q.answer));if(q.reading)body.append(el('p',q.reading));answer.append(cover,body);work.append(writing,answer);card.append(work);
  const reveal=btn('對答案',()=>{finish();v.revealed=!v.revealed;save();syncCard(q)});reveal.className='primary';reveal.setAttribute('aria-controls',body.id);card.append(reveal);
@@ -54,11 +54,16 @@ function finish(){if(!active)return;const a=active;active=null;if(a.points.some(
 function bind(q,c){c.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.button!==0)return;e.preventDefault();begin(q,e.pointerId,e);try{c.setPointerCapture(e.pointerId)}catch(x){}});
  c.addEventListener('pointermove',e=>{if(active?.id!==e.pointerId||active.q.id!==q.id)return;e.preventDefault();append(e);paint(q)});
  for(const name of ['pointerup','pointercancel','lostpointercapture'])c.addEventListener(name,e=>{if(active?.id===e.pointerId)finish()});
- // iPadOS stylus touch events prevent Pencil scrolling without cancelling finger pans.
- c.addEventListener('touchstart',e=>{const t=Array.from(e.changedTouches).find(t=>t.touchType==='stylus');if(!t)return;if(e.cancelable)e.preventDefault();if(!active)begin(q,'stylus:'+t.identifier,t)},{passive:false});
- c.addEventListener('touchmove',e=>{const t=Array.from(e.changedTouches).find(t=>t.touchType==='stylus');if(!t||!active||active.q.id!==q.id)return;if(e.cancelable)e.preventDefault();if(active.id==='stylus:'+t.identifier){append(t);paint(q)}},{passive:false});
- for(const name of ['touchend','touchcancel'])c.addEventListener(name,e=>{if(!active||active.q.id!==q.id)return;const t=Array.from(e.changedTouches).find(t=>'stylus:'+t.identifier===active.id);if(t)finish()},{passive:true});
+ // iOS fingers use Touch.identifier; Pencil/mouse keep their Pointer Events path.
+ c.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;const t=e.changedTouches[0];if(!t||(!fingerWriting&&t.touchType!=='stylus'))return;if(e.cancelable)e.preventDefault();if(!active)begin(q,'touch:'+t.identifier,t)},{passive:false});
+ c.addEventListener('touchmove',e=>{if(active&&Array.from(e.changedTouches).some(t=>t.touchType==='stylus')&&e.cancelable)e.preventDefault()},{passive:false});
 }
+function moveTouch(e){if(typeof active?.id!=='string')return;const t=Array.from(e.changedTouches).find(t=>'touch:'+t.identifier===active.id);if(!t)return;if(e.cancelable)e.preventDefault();append(t);paint(active.q)}
+function endTouch(e){if(typeof active?.id!=='string')return;if(Array.from(e.changedTouches).some(t=>'touch:'+t.identifier===active.id))finish()}
+document.addEventListener('touchmove',moveTouch,{passive:false});
+for(const name of ['touchend','touchcancel'])document.addEventListener(name,endTouch,{passive:true});
+function setFingerWriting(value){finish();fingerWriting=value;document.body.classList.toggle('finger-writing',value);$('fingerWrite').setAttribute('aria-pressed',String(value));$('fingerScroll').setAttribute('aria-pressed',String(!value));$('modeHelp').textContent=value?'手指可在格子內書寫；格子外仍可上下滑動。':'手指可上下滑動整頁；要用手指寫字時，切回「手寫」。';}
+$('fingerWrite').onclick=()=>setFingerWriting(true);$('fingerScroll').onclick=()=>setFingerWriting(false);
 window.addEventListener('pointerup',e=>{if(active?.id===e.pointerId)finish()});window.addEventListener('pointercancel',e=>{if(active?.id===e.pointerId)finish()});window.addEventListener('blur',finish);window.addEventListener('pagehide',()=>{finish();save()});document.addEventListener('visibilitychange',()=>{if(document.hidden)finish()});window.addEventListener('scroll',()=>{if(active)finish()},{passive:true});
 lessons.forEach(l=>{const option=el('option',`第${l.number}課｜${l.title}（${l.questions.length}題）`);option.value=l.number;$('lesson').append(option)});$('lesson').value=state.lesson;
 $('lesson').onchange=()=>{finish();state.lesson=Number($('lesson').value);retryIds=null;save();render()};
