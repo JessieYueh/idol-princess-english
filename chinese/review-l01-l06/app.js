@@ -6,8 +6,8 @@ try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.items&&typeof v.items=
 let database=null;
 function persisted(){return{lesson:state.lesson,items:Object.fromEntries(Object.entries(state.items).map(([id,v])=>[id,{strokes:v.strokes,revealed:!!v.revealed,grade:v.grade}]))}}
 function save(){const value=persisted();if(database){try{database.transaction('state','readwrite').objectStore('state').put(value,'current');return}catch(e){}}try{localStorage.setItem(KEY,JSON.stringify(value))}catch(e){}}
-function clearSavedInk(){for(const v of Object.values(state.items)){if(!v||typeof v!=='object')continue;v.strokes=[];v.undo=[];v.redo=[]}}
-function initialize(){const ready=()=>{clearSavedInk();save();render()};if(!window.indexedDB){ready();return}try{const request=indexedDB.open(KEY,1);request.onupgradeneeded=()=>request.result.createObjectStore('state');request.onerror=ready;request.onsuccess=()=>{database=request.result;const read=database.transaction('state').objectStore('state').get('current');read.onsuccess=()=>{const v=read.result;if(v&&v.items){state=v;state.lesson=Math.min(6,Math.max(1,Number(v.lesson)||1));$('lesson').value=state.lesson}ready()};read.onerror=ready}}catch(e){ready()}}
+function resetQuestionProgress(){for(const v of Object.values(state.items)){if(!v||typeof v!=='object')continue;v.strokes=[];v.undo=[];v.redo=[];v.grade=null}}
+function initialize(){const ready=()=>{resetQuestionProgress();save();render()};if(!window.indexedDB){ready();return}try{const request=indexedDB.open(KEY,1);request.onupgradeneeded=()=>request.result.createObjectStore('state');request.onerror=ready;request.onsuccess=()=>{database=request.result;const read=database.transaction('state').objectStore('state').get('current');read.onsuccess=()=>{const v=read.result;if(v&&v.items){state=v;state.lesson=Math.min(6,Math.max(1,Number(v.lesson)||1));$('lesson').value=state.lesson}ready()};read.onerror=ready}}catch(e){ready()}}
 
 function item(q){let v=state.items[q.id];if(!v||!Array.isArray(v.strokes))v=state.items[q.id]={strokes:[],undo:[],redo:[],revealed:false,grade:null};v.undo||=[];v.redo||=[];return v}
 function lesson(){return lessons[state.lesson-1]}
@@ -21,7 +21,7 @@ function updateProgress(){const qs=lesson().questions, good=qs.filter(q=>item(q)
  if(!$('summary').hidden)$('summaryText').textContent=again?`全部核對完成！${good} 題答對，還有 ${again} 題再練一次就更熟。`:`${qs.length} 題全部完成！每一筆努力都值得一顆星。`;
 }
 function syncCard(q){const b=boards.get(q.id);if(!b)return;const v=item(q);b.answer.classList.toggle('closed',!v.revealed);b.body.hidden=!v.revealed;b.grade.hidden=!v.revealed;b.reveal.textContent=v.revealed?'收起答案':'對答案';b.reveal.setAttribute('aria-expanded',String(!!v.revealed));b.card.classList.toggle('marked-good',v.grade==='good');b.card.classList.toggle('marked-again',v.grade==='again');b.good.setAttribute('aria-pressed',String(v.grade==='good'));b.again.setAttribute('aria-pressed',String(v.grade==='again'));b.undo.disabled=!v.undo.length;b.redo.disabled=!v.redo.length;b.clear.disabled=!v.strokes.length}
-function grade(q,value){const v=item(q),old=v.grade;v.grade=value;save();syncCard(q);updateProgress();if(value==='good'&&old!=='good'){
+function grade(q,value){const v=item(q),old=v.grade;v.grade=old===value?null:value;save();syncCard(q);updateProgress();if(v.grade==='good'&&old!=='good'){
  const count=lesson().questions.filter(p=>item(p).grade==='good').length;
  if(count%10===0||lesson().questions.every(p=>item(p).grade))reward(count);
 }}
