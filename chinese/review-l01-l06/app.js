@@ -6,7 +6,8 @@ try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.items&&typeof v.items=
 let database=null;
 function persisted(){return{lesson:state.lesson,items:Object.fromEntries(Object.entries(state.items).map(([id,v])=>[id,{strokes:v.strokes,revealed:!!v.revealed,grade:v.grade}]))}}
 function save(){const value=persisted();if(database){try{database.transaction('state','readwrite').objectStore('state').put(value,'current');return}catch(e){}}try{localStorage.setItem(KEY,JSON.stringify(value))}catch(e){}}
-function initialize(){if(!window.indexedDB){render();return}try{const request=indexedDB.open(KEY,1);request.onupgradeneeded=()=>request.result.createObjectStore('state');request.onerror=()=>render();request.onsuccess=()=>{database=request.result;const read=database.transaction('state').objectStore('state').get('current');read.onsuccess=()=>{const v=read.result;if(v&&v.items){state=v;state.lesson=Math.min(6,Math.max(1,Number(v.lesson)||1));$('lesson').value=state.lesson}render()};read.onerror=()=>render()}}catch(e){render()}}
+function clearSavedInk(){for(const v of Object.values(state.items)){if(!v||typeof v!=='object')continue;v.strokes=[];v.undo=[];v.redo=[]}}
+function initialize(){const ready=()=>{clearSavedInk();save();render()};if(!window.indexedDB){ready();return}try{const request=indexedDB.open(KEY,1);request.onupgradeneeded=()=>request.result.createObjectStore('state');request.onerror=ready;request.onsuccess=()=>{database=request.result;const read=database.transaction('state').objectStore('state').get('current');read.onsuccess=()=>{const v=read.result;if(v&&v.items){state=v;state.lesson=Math.min(6,Math.max(1,Number(v.lesson)||1));$('lesson').value=state.lesson}ready()};read.onerror=ready}}catch(e){ready()}}
 
 function item(q){let v=state.items[q.id];if(!v||!Array.isArray(v.strokes))v=state.items[q.id]={strokes:[],undo:[],redo:[],revealed:false,grade:null};v.undo||=[];v.redo||=[];return v}
 function lesson(){return lessons[state.lesson-1]}
