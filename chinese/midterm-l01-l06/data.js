@@ -156,12 +156,12 @@ window.MIDTERM_SETS = [
       {
         "id": "p1-16",
         "kind": "char",
-        "prompt": "寫出國字：（ㄘㄠ ㄌㄠˊ）",
-        "answer": "操勞",
+        "prompt": "寫出國字：（ㄘㄚ ㄏㄣˊ）",
+        "answer": "擦痕",
         "hint": "照片3・第16題",
         "source": "照片3・第16題",
         "seed": false,
-        "note": ""
+        "note": "依家長確認修正。"
       },
       {
         "id": "p1-17",
