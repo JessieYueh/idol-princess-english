@@ -156,13 +156,12 @@ window.MIDTERM_SETS = [
       {
         "id": "p1-16",
         "kind": "char",
-        "prompt": "圖片文字待核對（照片3・第16題）",
-        "answer": "待核對原題",
+        "prompt": "寫出國字：（ㄘㄠ ㄌㄠˊ）",
+        "answer": "操勞",
         "hint": "照片3・第16題",
         "source": "照片3・第16題",
         "seed": false,
-        "note": "照片此題較模糊，暫停作答，請核對原題。",
-        "pending": true
+        "note": ""
       },
       {
         "id": "p1-17",
@@ -3917,13 +3916,12 @@ window.MIDTERM_SETS = [
       {
         "id": "p6-4",
         "kind": "char",
-        "prompt": "圖片文字待核對（照片8・第4題）",
-        "answer": "待核對原題",
+        "prompt": "寫出國字：（ㄑㄧˊ ㄆㄢˊ）腳",
+        "answer": "棋盤",
         "hint": "照片8・第4題",
         "source": "照片8・第4題",
         "seed": false,
-        "note": "照片此題印刷字不清楚，暫停作答，請核對原卷。",
-        "pending": true
+        "note": ""
       },
       {
         "id": "p6-5",
