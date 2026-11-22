@@ -25,6 +25,11 @@
  function markWrong(w){if(!recorded){remember(w);recorded=true}}
  function show(){const w=data.words[ids[pos]];recorded=false;revealed=false;points=[];drawing=false;byId('options').replaceChildren();area.replaceChildren();byId('feedback').textContent='';byId('next').hidden=true;byId('quizProgress').textContent=`第 ${pos+1} / ${ids.length} 題`;
   byId('question').textContent=(type==='shape'?'選出正確的字：':'請手寫：')+w.meaning;
+  if(type!=='shape'&&(w.kind||'vocab')==='vocab'){
+   const reading=pronunciationFor(w);
+   const cue=document.createElement('p');cue.setAttribute('aria-label','語詞注音提示');cue.style.cssText='font-family:system-ui,-apple-system,sans-serif;font-size:26px;line-height:1.8;color:var(--blue);overflow-wrap:anywhere;word-spacing:.35em';
+   cue.textContent=reading?'注音：'+reading:'注音尚未設定，請先由家長在語詞設定補上。';area.append(cue);
+  }
   if(type==='shape'){
    let locked=false;const choices=[w.word,w.wrong].sort(()=>Math.random()-.5);
    for(const text of choices){const b=makeButton(text,()=>{if(locked)return;if(text!==w.word){markWrong(w);b.disabled=true;byId('feedback').textContent='再看看字的部件，這題已加入錯題紀錄。';return}locked=true;if(!recorded)correct++;byId('feedback').textContent='正確：'+annotatedWord(w);for(const c of byId('options').children)c.disabled=true;byId('next').hidden=false});byId('options').append(b)}return;
