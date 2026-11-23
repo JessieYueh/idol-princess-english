@@ -27,8 +27,8 @@
   byId('question').textContent=(type==='shape'?'選出正確的字：':'請手寫：')+w.meaning;
   if(type!=='shape'&&(w.kind||'vocab')==='vocab'){
    const reading=pronunciationFor(w);
-   const cue=document.createElement('p');cue.setAttribute('aria-label','語詞注音提示');cue.style.cssText='font-family:system-ui,-apple-system,sans-serif;font-size:26px;line-height:1.8;color:var(--blue);overflow-wrap:anywhere;word-spacing:.35em';
-   cue.textContent=reading?'注音：'+reading:'注音尚未設定，請先由家長在語詞設定補上。';area.append(cue);
+   byId('question').textContent=reading?'看注音寫語詞：'+reading:'語詞注音尚未設定，請先由家長補上。';
+   const hint=document.createElement('p');hint.className='hint';hint.textContent='語意提示：'+w.meaning;area.append(hint);
   }
   if(type==='shape'){
    let locked=false;const choices=[w.word,w.wrong].sort(()=>Math.random()-.5);
