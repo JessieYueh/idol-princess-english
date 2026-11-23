@@ -5,7 +5,7 @@
  let records={};try{const value=JSON.parse(localStorage.getItem(key));if(value&&typeof value==='object'&&!Array.isArray(value))records=value}catch(e){}
  const ident=w=>JSON.stringify([w.kind||'vocab',w.word]);
  const message=document.createElement('p');message.setAttribute('role','status');
- function persist(){try{localStorage.setItem(key,JSON.stringify(records));message.textContent=''}catch(e){message.textContent='錯題紀錄無法保存，請確認瀏覽器允許儲存資料。'}}
+ function persist(){try{localStorage.setItem(key,JSON.stringify(records));message.textContent='';return true}catch(e){message.textContent='錯題紀錄無法保存，請確認瀏覽器允許儲存資料。';return false}}
  function remember(w){const id=ident(w),old=records[id];records[id]={word:w.word,kind:w.kind||'vocab',meaning:w.meaning,wrong:w.wrong,count:(Number(old?.count)||0)+1,last:new Date().toISOString()};persist()}
  const toolbar=document.createElement('div');toolbar.className='row';
  const makeButton=(label,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;return b};
@@ -51,7 +51,7 @@
   for(const evt of ['touchstart','touchmove'])canvas.addEventListener(evt,e=>{if(e.cancelable)e.preventDefault()},{passive:false});
   const answer=document.createElement('p');answer.hidden=true;answer.style.cssText='font-family:MOEKai,serif;font-size:30px';
   let graded=false;
-  function grade(ok){if(!revealed||graded)return;graded=true;if(ok){correct++;byId('reward').showModal();byId('rewardImg').src='../../../images/asset_7c3d93f72a48abe3.png';byId('voice').src='../../../media/asset_b2fbc9cc46336d05.mp3';byId('voice').play().catch(()=>{})}else markWrong(w);yes.disabled=no.disabled=true;byId('feedback').textContent=ok?'已標記答對。':'已加入本課錯題紀錄。';byId('next').hidden=false}
+  function grade(ok){if(!revealed||graded)return;graded=true;let removal='';if(ok&&type==='mistakes'&&records[ident(w)]){const id=ident(w),record=records[id];delete records[id];if(persist())removal='已從本課錯題紀錄移除。';else{records[id]=record;removal='瀏覽器無法儲存，這題仍保留在錯題紀錄。'}}if(ok){correct++;byId('reward').showModal();byId('rewardImg').src='../../../images/asset_7c3d93f72a48abe3.png';byId('voice').src='../../../media/asset_b2fbc9cc46336d05.mp3';byId('voice').play().catch(()=>{})}else markWrong(w);yes.disabled=no.disabled=true;byId('feedback').textContent=ok?(removal||'已標記答對。'):'已加入本課錯題紀錄。';byId('next').hidden=false}
   const yes=makeButton('我寫對了',()=>grade(true)),no=makeButton('需要再練習',()=>grade(false));yes.hidden=no.hidden=true;
   const clear=makeButton('清除重寫',()=>{if(revealed)return;points=[];draw();reveal.disabled=true});
   const undone=[];
@@ -59,8 +59,8 @@
   canvas.addEventListener('pointerdown',()=>{if(drawing)undone.length=0});
   const tip=document.createElement('p');tip.className='hint';tip.textContent='寫完按「對答案」，由自己或家長核對後標記；不自動判斷字形。';area.append(canvas,undo,redo,clear,reveal,answer,yes,no,tip);draw();
  }
- byId('next').onclick=()=>{if(++pos<ids.length)show();else{panel('result');area.replaceChildren();byId('score').textContent=`本次答對 ${correct} / ${ids.length} 題`;byId('review').replaceChildren(makeButton('查看本課錯題紀錄',showRecords));if(byId('retryWrong'))byId('retryWrong').hidden=true}};
- byId('retry').onclick=()=>begin(type,ids.slice());
+ byId('next').onclick=()=>{if(++pos<ids.length)show();else{panel('result');area.replaceChildren();byId('score').textContent=`本次答對 ${correct} / ${ids.length} 題`;byId('review').replaceChildren(makeButton('查看本課錯題紀錄',showRecords));byId('retry').hidden=type==='mistakes'&&!ids.some(i=>records[ident(data.words[i])]);if(byId('retryWrong'))byId('retryWrong').hidden=true}};
+ byId('retry').onclick=()=>{const remaining=type==='mistakes'?ids.filter(i=>records[ident(data.words[i])]):ids.slice();if(remaining.length)begin(type,remaining)};
  byId('back').onclick=()=>{drawing=false;panel('practice');area.replaceChildren()};
  start=()=>begin(mode);byId('start').onclick=start;
  const previousProgress=progress;progress=()=>{previousProgress();byId('start').disabled=false;byId('start').textContent='直接開始'+(mode==='char'?'生字':'語詞')+'手寫測驗 →'};progress();
