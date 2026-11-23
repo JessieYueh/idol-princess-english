@@ -24,7 +24,12 @@
  function begin(kind,selected){stopWriting();archive.hidden=true;type=kind;ids=selected||data.words.map((w,i)=>i).filter(i=>kind==='shape'?data.words[i].kind==='char':(data.words[i].kind||'vocab')===kind);if(!ids.length)return;pos=0;correct=0;panel('quiz');show()}
  function markWrong(w){if(!recorded){remember(w);recorded=true}}
  function show(){const w=data.words[ids[pos]];recorded=false;revealed=false;points=[];drawing=false;byId('options').replaceChildren();area.replaceChildren();byId('feedback').textContent='';byId('next').hidden=true;byId('quizProgress').textContent=`第 ${pos+1} / ${ids.length} 題`;
+  byId('quizBadge').textContent='② '+{char:'生字測驗',vocab:'語詞測驗',shape:'形近字測驗',mistakes:'錯題重練'}[type];
   byId('question').textContent=(type==='shape'?'選出正確的字：':'請手寫：')+w.meaning;
+  if(type!=='shape'&&w.kind==='char'){
+   const reading=pronunciationFor(w);
+   if(reading)byId('question').textContent='請手寫：'+(/[_＿]/.test(w.meaning)?w.meaning.replace(/[_＿]+/g,blank=>blank+'（'+reading+'）'):w.meaning+'（注音：'+reading+'）');
+  }
   if(type!=='shape'&&(w.kind||'vocab')==='vocab'){
    const reading=pronunciationFor(w);
    byId('question').textContent=reading?'看注音寫語詞：'+reading:'語詞注音尚未設定，請先由家長補上。';
